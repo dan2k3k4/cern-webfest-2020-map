@@ -32,13 +32,24 @@
           .then(res => res.text())
           .then(csv => d3.csvParse(csv, ({ lat, lng, pop }) => ({ lat: +lat, lng: +lng, pop: +pop })))
           .then(csv => csv.filter(item => !(Number.isNaN(item.lat) || Number.isNaN(item.lng)) ))
+          .then(csv => csv.map(item => Object.assign(item, {
+              startLat: 46.229031,
+              startLng: 6.071440,
+              endLat: item.lat,
+              endLng: item.lng,
+              color: [
+                ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)],
+                ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)],
+              ]
+            })
+          ))
           .then(setPopData);
       }, []);
 
       useEffect(() => {
         // Auto-rotate
         globeEl.current.controls().autoRotate = true;
-        globeEl.current.controls().autoRotateSpeed = 0.7;
+        globeEl.current.controls().autoRotateSpeed = 0.8;
       }, []);
 
       const weightColor = d3.scaleSequentialSqrt(d3.interpolateYlOrRd)
@@ -56,8 +67,14 @@
         hexBinResolution={4}
         hexTopColor={d => weightColor(d.sumWeight)}
         hexSideColor={d => weightColor(d.sumWeight)}
-        hexBinMerge={true}
-        enablePointerInteraction={false}
+        hexBinMerge={false}
+        enablePointerInteraction={true}
+
+        arcsData={popData}
+        arcColor={'color'}
+        arcDashLength={() => Math.random()}
+        arcDashGap={() => Math.random()}
+        arcDashAnimateTime={() => Math.random() * 4000 + 800}
       />;
     };
 
