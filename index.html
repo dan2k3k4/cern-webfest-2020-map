@@ -30,7 +30,7 @@
         // load data
         fetch('https://gist.githubusercontent.com/dan2k3k4/4cd7152ed047b046ac224ff8bf77a32a/raw/43e20963f6894c4a63e23fccf9a5ee8e2c989559/cern-webfest-2020-participants-mapping-indigo.csv')
           .then(res => res.text())
-          .then(csv => d3.csvParse(csv, ({ lat, lng, pop }) => ({ lat: +lat, lng: +lng, pop: +pop })))
+          .then(csv => d3.csvParse(csv, ({ lat, lng, pop }) => ({ lat: +lat, lng: +lng, pop: +(pop * 100000) })))
           .then(setPopData);
       }, []);
 
